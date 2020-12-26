@@ -1,52 +1,62 @@
-#!/usr/bin/env python3
-
 import time
 import threading
 import digitalio
 import board
 
+from flask import Flask
+
 ssr = digitalio.DigitalInOut(board.D26)
 ssr.direction = digitalio.Direction.OUTPUT
 
 flag = 1
-spacing = 1.0
+dc = 1.0
 
 def cycle():
   global flag
-  global spacing
+  global dc
   global ssr
 
   while flag == 1:
-#    print("hi")
+    print("hi")
     ssr.value = True
-    time.sleep(spacing * 5)
+    time.sleep(dc * 5)
 
-#    print("low")
+    print("low")
     ssr.value = False
-    time.sleep(5 - (spacing * 5))
+    time.sleep(5 - (dc * 5))
 
     if flag == False:
       print("end loop")
 
-def get_input():
+@app.route("/dutycycle/<dc>"")
+def get_input(dc):
   global flag
-  global spacing
   global ssr
+  global duty
 
   while flag == 1:
 
-    key = input("Enter new ratio or q to quit: ")
-
-    if key == 'q':
+    if dc == 'q':
       print("terminating gracefully")
       ssr.value = False
       flag = False
     else:
-      spacing = float(key) 
-      print("updated duty cycle to ", key)
+      duty = float(dc)
+      print("updated spacing")
 
 duty_cycle = threading.Thread(target=cycle)
 inputs = threading.Thread(target=get_input)
 
 duty_cycle.start()
 inputs.start()
+
+
+app = Flask(__name__)
+
+@app.route('/')
+def index():
+  return 'hello world'
+
+if __name__ == '__main__':
+  app.run(host='0.0.0.0')
+
