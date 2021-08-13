@@ -19,11 +19,11 @@ def cycle():
   while flag == 1:
 #    print("hi")
     ssr.value = True
-    time.sleep(spacing * 5)
+    time.sleep(spacing * 2)
 
 #    print("low")
     ssr.value = False
-    time.sleep(5 - (spacing * 5))
+    time.sleep(2 - (spacing * 2))
 
     if flag == False:
       print("end loop")
