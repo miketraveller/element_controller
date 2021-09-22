@@ -2,11 +2,10 @@
 
 import time
 import threading
-import digitalio
-import board
+import RPi.GPIO as gpio
 
-ssr = digitalio.DigitalInOut(board.D26)
-ssr.direction = digitalio.Direction.OUTPUT
+gpio.setmode(gpio.BCM)
+gpio.setup(26, gpio.OUT)
 
 flag = 1
 spacing = 1.0
@@ -18,11 +17,11 @@ def cycle():
 
   while flag == 1:
 #    print("hi")
-    ssr.value = True
+    gpio.output(26, gpio.HIGH)
     time.sleep(spacing * 2)
 
 #    print("low")
-    ssr.value = False
+    gpio.output(26, gpio.LOW)
     time.sleep(2 - (spacing * 2))
 
     if flag == False:
@@ -39,7 +38,7 @@ def get_input():
 
     if key == 'q':
       print("terminating gracefully")
-      ssr.value = False
+      gpio.output(26, gpio.LOW)
       flag = False
     else:
       spacing = float(key) 
